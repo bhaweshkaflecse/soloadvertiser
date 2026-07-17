@@ -1,0 +1,48 @@
+{
+  "id": "FEAT-001",
+  "type": "docs",
+  "description": "Create Document 01 - Product Requirements specification at docs/01-product-requirements.md. This is the first of 18 specification documents for the Solo Advertiser platform. The document must comprehensively define all product-level requirements for the managed advertising operations platform connecting verified businesses with verified ride-sharing motorcycle riders through removable helmet/asset advertisements in Kathmandu Valley, Nepal.",
+  "status": "in_progress",
+  "steps": [
+    "Create the docs/ directory at /projects/sandbox/soloadvertiser/docs/",
+    "Write docs/01-product-requirements.md following the mandatory document structure: Purpose, Scope, Definitions, Actors, Functional Requirements, Business Rules, State Machines (if applicable), Data Requirements, API Impact, UI Impact, Non-Functional Requirements, Acceptance Criteria, Out of Scope, Requirement IDs/Traceability",
+    "Purpose section: Define the document's role as a contract specification for the Solo Advertiser MVP platform",
+    "Scope section: Define MVP boundaries - Kathmandu Valley, NPR currency, manual operations, single VPS deployment, 8000-15000 riders, 500-1500 businesses",
+    "Definitions section: Define all domain-specific terms (campaign, assignment, asset, zone, ward, escrow, ledger, reliability score, etc.)",
+    "Actors section: Define all system actors - Rider, Business, Operations Staff, Finance Staff, Admin, Super Admin, System",
+    "Functional Requirements section: Cover ALL domain modules with uniquely identified requirements (REQ-PRD-001 through REQ-PRD-NNN) using RFC 2119 SHALL/SHOULD/MAY language. Must cover: Identity & Auth, Rider Domain (full pipeline), Business Domain (full pipeline), Campaign Domain (full lifecycle), Assignment Domain, Sticker Inventory, Financial Platform, Notification Domain, Configuration Service, Audit Domain, Timeline Service, Media Service, Support Domain, Analytics Domain",
+    "Business Rules section: Document all locked business rules - pricing (NPR 120/rider/day business rate, NPR 100/rider/day rider rate, ~16.67% commission), minimums (15 days, 100 riders), verification intervals (7 days), payout cycles (15 days, NPR 500 minimum), concurrent campaigns per asset (1), verification failure escalation (warning -> temp suspension -> campaign removal), payment methods (eSewa, Khalti, Bank Transfer, IME Pay)",
+    "State Machines section: Document state machines for Rider (Pre-Registered through Suspended), Business (Registered through Blacklisted), and Campaign (Draft through Completed/Paused/Cancelled) with valid transitions",
+    "Data Requirements section: High-level data entities and their relationships, JSONB usage patterns, audit trail requirements",
+    "API Impact section: REST + JSON + OpenAPI 3.1 + /api/v1/ versioning, structured error codes (CAMPAIGN_001, PAYMENT_004 pattern), domain-specific endpoint categories",
+    "UI Impact section: Four applications (Rider Mobile App, Business Web Portal, Admin Panel, Super Admin Panel) with high-level feature mapping",
+    "Non-Functional Requirements section: Performance targets for single Contabo VPS 6 (6 vCPU, 12GB RAM, 200GB SSD), availability, security (mandatory audit: Who/What/Before/After/Reason/IP/Device/Time), scalability considerations",
+    "Acceptance Criteria section: Measurable criteria that confirm the MVP platform meets its requirements",
+    "Out of Scope section: Explicitly list what is NOT in MVP - multiple cities, AI/ML, payment gateway SDK, automated matching, public APIs, fleet partnerships, multiple currencies/languages",
+    "Requirement IDs/Traceability section: Index of all requirement IDs with cross-references to future specification documents (02-18)"
+  ],
+  "acceptance_criteria": [
+    "File exists at docs/01-product-requirements.md",
+    "Document follows the mandatory structure with all 14 sections present",
+    "All requirements use RFC 2119 language (SHALL/SHALL NOT/SHOULD/MAY)",
+    "All requirements have unique IDs with REQ-PRD prefix (e.g., REQ-PRD-001)",
+    "All 14 domain modules from the frozen architecture are covered in Functional Requirements",
+    "All locked business rules are documented with exact values",
+    "State machines for Rider, Business, and Campaign are fully documented with all states from the frozen architecture",
+    "Four applications are referenced in UI Impact",
+    "MVP constraints (Kathmandu Valley, NPR, manual ops, single VPS) are clearly stated",
+    "Out of Scope section explicitly excludes future-vision items",
+    "Document is well-formatted Markdown with proper headings, tables where appropriate, and readable structure",
+    "Traceability section maps requirements to downstream specification documents"
+  ],
+  "verification": [
+    "Confirm file exists: ls docs/01-product-requirements.md",
+    "Confirm all 14 mandatory sections are present by checking for their headings",
+    "Confirm REQ-PRD requirement IDs are present and sequential",
+    "Confirm RFC 2119 keywords (SHALL, SHOULD, MAY) are used throughout",
+    "Confirm all domain modules are covered",
+    "Confirm business rules match the locked values exactly"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

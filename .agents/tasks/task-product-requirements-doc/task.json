@@ -1,0 +1,7 @@
+{
+  "task_id": "task-product-requirements-doc",
+  "task_description": "Create Document 01 - Product Requirements specification for the Solo Advertiser platform. This is the first of 18 specification documents that will guide implementation of a managed advertising operations platform connecting verified businesses with verified ride-sharing motorcycle riders through removable helmet/asset advertisements in Kathmandu Valley, Nepal.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null
+}

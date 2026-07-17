@@ -1,0 +1,16 @@
+{
+  "project_type": "Managed advertising operations platform - specification documentation phase",
+  "language": "Markdown (documentation phase); eventual implementation: NestJS, Flutter, React/Next.js",
+  "build_system": "N/A - documentation phase, no build system yet",
+  "test_framework": "N/A - documentation phase",
+  "build_command": "N/A",
+  "test_command": "N/A",
+  "verification_instructions": "Verify the document exists at docs/01-product-requirements.md, follows the mandatory structure, uses RFC 2119 language, has unique requirement IDs with REQ-PRD prefix, and covers all domain modules from the frozen architecture.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "No setup needed - empty repository, documentation only task",
+  "environment_constraints": "None - this is a documentation creation task",
+  "contribution_requirements": "Document must follow the mandatory structure: Purpose, Scope, Definitions, Actors, Functional Requirements, Business Rules, State Machines, Data Requirements, API Impact, UI Impact, Non-Functional Requirements, Acceptance Criteria, Out of Scope, Requirement IDs/Traceability. Every requirement must be testable, uniquely identifiable (REQ-PRD-NNN), traceable, and use SHALL/SHALL NOT/SHOULD/MAY language (RFC 2119).",
+  "key_patterns": "Requirement ID format: REQ-PRD-NNN. RFC 2119 keywords. Architecture is frozen - no changes allowed. MVP focus on Kathmandu Valley, Nepal. Manual operations by design.",
+  "relevant_files": ["docs/01-product-requirements.md"],
+  "directory_structure": "Empty repository - docs/ directory needs to be created"
+}
