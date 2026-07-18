@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { IdentityService } from './identity.service';
-import { RegisterDto, LoginDto, RefreshTokenDto, SendOtpDto, VerifyOtpDto } from './dto';
+import { GoogleAuthService } from './google-auth.service';
+import { RegisterDto, LoginDto, RefreshTokenDto, SendOtpDto, VerifyOtpDto, GoogleAuthDto } from './dto';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { JwtPayload } from '@solo-advertiser/types';
@@ -20,7 +21,10 @@ import { JwtPayload } from '@solo-advertiser/types';
  */
 @Controller('auth')
 export class IdentityController {
-  constructor(private readonly identityService: IdentityService) {}
+  constructor(
+    private readonly identityService: IdentityService,
+    private readonly googleAuthService: GoogleAuthService,
+  ) {}
 
   /**
    * POST /api/v1/auth/register
@@ -42,6 +46,26 @@ export class IdentityController {
   async login(@Body() dto: LoginDto, @Req() req: Request) {
     const ipAddress = req.ip || req.socket.remoteAddress;
     const tokens = await this.identityService.login(dto, ipAddress);
+    return { success: true, data: tokens, timestamp: new Date().toISOString() };
+  }
+
+  /**
+   * POST /api/v1/auth/google
+   * Authenticate with Google ID token (web or mobile).
+   */
+  @Public()
+  @Post('google')
+  async googleAuth(@Body() dto: GoogleAuthDto, @Req() req: Request) {
+    const ipAddress = req.ip || req.socket.remoteAddress;
+    const googleProfile = await this.googleAuthService.verifyGoogleToken(
+      dto.idToken,
+      dto.clientType,
+    );
+    const tokens = await this.googleAuthService.findOrCreateUser(
+      googleProfile,
+      undefined,
+      ipAddress,
+    );
     return { success: true, data: tokens, timestamp: new Date().toISOString() };
   }
 

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,6 +23,9 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { MarketplaceModule } from './modules/marketplace/marketplace.module';
 import { PartnerModule } from './modules/partner/partner.module';
 import { DistributionModule } from './modules/distribution/distribution.module';
+import { WebSocketModule } from './modules/websocket/websocket.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { SupportModule } from './modules/support/support.module';
 
 // Global guards
 import { AuthGuard } from './common/guards/auth.guard';
@@ -31,11 +35,15 @@ import { RolesGuard } from './common/guards/roles.guard';
   imports: [
     // Infrastructure
     PrismaModule,
+    EventEmitterModule.forRoot(),
 
     // Feature modules — Sprint 1
     IdentityModule,
     ConfigurationModule,
     MediaModule,
+    WebSocketModule,
+    AuditModule,
+    SupportModule,
 
     // Feature modules — Sprint 2
     RiderModule,

@@ -904,3 +904,70 @@ model ChannelLaunchProgress {
 
   @@map("marketplace_launch_progress")
 }
+
+
+
+// === AUDIT MODULE (CTX-010) ===
+model AuditEntry {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorId     String?  @map("actor_id") @db.Uuid
+  actorRole   String?  @map("actor_role")
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id") @db.Uuid
+  beforeState Json?    @map("before_state")
+  afterState  Json?    @map("after_state")
+  reason      String?
+  ipAddress   String?  @map("ip_address")
+  deviceInfo  String?  @map("device_info")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  // NO updatedAt — immutable
+
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_entries")
+}
+
+// === SUPPORT MODULE (CTX-013) ===
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  AWAITING_RESPONSE
+  RESOLVED
+  CLOSED
+}
+
+model SupportTicket {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @map("user_id") @db.Uuid
+  category    String
+  subject     String
+  status      TicketStatus @default(OPEN)
+  priority    String       @default("normal")
+  assignedTo  String?      @map("assigned_to") @db.Uuid
+  resolvedAt  DateTime?    @map("resolved_at")
+  closedAt    DateTime?    @map("closed_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  messages SupportMessage[]
+  @@index([userId, status])
+  @@index([status, createdAt])
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  ticketId  String   @map("ticket_id") @db.Uuid
+  senderId  String   @map("sender_id") @db.Uuid
+  senderRole String  @map("sender_role")
+  content   String
+  mediaIds  String[] @map("media_ids") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id])
+  @@map("support_messages")
+}
