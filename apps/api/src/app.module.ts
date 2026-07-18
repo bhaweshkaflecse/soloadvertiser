@@ -26,16 +26,29 @@ import { DistributionModule } from './modules/distribution/distribution.module';
 import { WebSocketModule } from './modules/websocket/websocket.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { SupportModule } from './modules/support/support.module';
+import { EmailModule } from './modules/email/email.module';
+
+// Background processing
+import { WorkerModule } from './workers/worker.module';
+import { CronModule } from './cron/cron.module';
 
 // Global guards
 import { AuthGuard } from './common/guards/auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { ThrottleGuard } from './common/guards/throttle.guard';
 
 @Module({
   imports: [
     // Infrastructure
     PrismaModule,
     EventEmitterModule.forRoot(),
+
+    // Email & SMS
+    EmailModule,
+
+    // Background processing
+    WorkerModule,
+    CronModule,
 
     // Feature modules — Sprint 1
     IdentityModule,
@@ -71,6 +84,11 @@ import { RolesGuard } from './common/guards/roles.guard';
   controllers: [AppController],
   providers: [
     AppService,
+    // Global rate limiting guard — applies to all routes
+    {
+      provide: APP_GUARD,
+      useClass: ThrottleGuard,
+    },
     // Global authentication guard — all routes require JWT unless marked @Public()
     {
       provide: APP_GUARD,
