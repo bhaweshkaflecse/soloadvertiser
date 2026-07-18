@@ -1,0 +1,9 @@
+{
+  "extends": "@soloadvertiser/tsconfig/tsconfig.library.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*"]
+}
