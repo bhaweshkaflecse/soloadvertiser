@@ -601,3 +601,103 @@ model Invoice {
 
   @@map("finance_invoices")
 }
+
+
+
+// === NOTIFICATION MODULE (CTX-008) ===
+
+model Notification {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  title       String
+  body        String
+  type        String   // assignment, verification, payout, document, campaign, support, system
+  channel     String   // push, in_app
+  templateId  String?  @map("template_id") @db.Uuid
+  deepLink    String?  @map("deep_link")
+  isRead      Boolean  @default(false) @map("is_read")
+  readAt      DateTime? @map("read_at")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@map("notification_notifications")
+}
+
+model NotificationTemplate {
+  id          String   @id @default(uuid()) @db.Uuid
+  code        String
+  version     Int      @default(1)
+  channel     String   // push, in_app, sms
+  language    String   @default("en")
+  title       String
+  body        String
+  variables   String[] // declared variable names
+  isActive    Boolean  @default(true) @map("is_active")
+  createdBy   String?  @map("created_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([code, version, channel, language])
+  @@map("notification_templates")
+}
+
+model NotificationPreference {
+  id       String  @id @default(uuid()) @db.Uuid
+  userId   String  @map("user_id") @db.Uuid
+  category String  // assignment, verification, payout, document, campaign, support, system
+  push     Boolean @default(true)
+  inApp    Boolean @default(true) @map("in_app")
+
+  @@unique([userId, category])
+  @@map("notification_preferences")
+}
+
+// === TIMELINE MODULE (CTX-011) ===
+
+model TimelineEntry {
+  id          String   @id @default(uuid()) @db.Uuid
+  entityType  String   @map("entity_type") // rider, business, campaign, assignment
+  entityId    String   @map("entity_id") @db.Uuid
+  eventType   String   @map("event_type")
+  title       String
+  description String?
+  actorId     String?  @map("actor_id") @db.Uuid
+  actorRole   String?  @map("actor_role")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId, createdAt])
+  @@map("timeline_entries")
+}
+
+// === ANALYTICS MODULE (CTX-014) ===
+
+model MetricSnapshot {
+  id        String   @id @default(uuid()) @db.Uuid
+  metric    String   // active_riders, active_campaigns, total_revenue, etc.
+  value     Decimal  @db.Decimal(15, 2)
+  dimension String?  // zone, channel, category (for dimensional metrics)
+  dimensionValue String? @map("dimension_value")
+  period    String   @default("daily") // hourly, daily, weekly, monthly
+  periodStart DateTime @map("period_start")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([metric, periodStart])
+  @@index([metric, dimension, periodStart])
+  @@map("analytics_metric_snapshots")
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  eventType  String   @map("event_type")
+  entityType String?  @map("entity_type")
+  entityId   String?  @map("entity_id") @db.Uuid
+  actorId    String?  @map("actor_id") @db.Uuid
+  properties Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([eventType, createdAt])
+  @@map("analytics_events")
+}

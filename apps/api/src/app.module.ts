@@ -16,6 +16,9 @@ import { BusinessModule } from './modules/business/business.module';
 import { CampaignModule } from './modules/campaign/campaign.module';
 import { AssignmentModule } from './modules/assignment/assignment.module';
 import { FinanceModule } from './modules/finance/finance.module';
+import { NotificationModule } from './modules/notification/notification.module';
+import { TimelineModule } from './modules/timeline/timeline.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 // Global guards
 import { AuthGuard } from './common/guards/auth.guard';
@@ -43,6 +46,11 @@ import { RolesGuard } from './common/guards/roles.guard';
 
     // Feature modules — Sprint 5
     FinanceModule,
+
+    // Feature modules — Sprint 6
+    NotificationModule,
+    TimelineModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [

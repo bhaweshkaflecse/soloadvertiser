@@ -690,3 +690,153 @@ export interface ReconciliationReport {
   }>;
   generatedAt: Date;
 }
+
+
+
+// === NOTIFICATION TYPES (CTX-008) ===
+
+/**
+ * Notification entity type.
+ */
+export interface NotificationType {
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+  type: string;
+  channel: string;
+  templateId: string | null;
+  deepLink: string | null;
+  isRead: boolean;
+  readAt: Date | null;
+  metadata: Record<string, unknown> | null;
+  createdAt: Date;
+}
+
+/**
+ * Notification category enum for type safety.
+ */
+export enum NotificationCategoryEnum {
+  ASSIGNMENT = 'assignment',
+  VERIFICATION = 'verification',
+  PAYOUT = 'payout',
+  DOCUMENT = 'document',
+  CAMPAIGN = 'campaign',
+  SUPPORT = 'support',
+  SYSTEM = 'system',
+}
+
+/**
+ * Notification preference per category.
+ */
+export interface NotificationPreferenceType {
+  id: string;
+  userId: string;
+  category: string;
+  push: boolean;
+  inApp: boolean;
+}
+
+/**
+ * Notification template definition.
+ */
+export interface NotificationTemplateType {
+  id: string;
+  code: string;
+  version: number;
+  channel: string;
+  language: string;
+  title: string;
+  body: string;
+  variables: string[];
+  isActive: boolean;
+  createdBy: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// === TIMELINE TYPES (CTX-011) ===
+
+/**
+ * Timeline entry entity type.
+ */
+export interface TimelineEntryType {
+  id: string;
+  entityType: string;
+  entityId: string;
+  eventType: string;
+  title: string;
+  description: string | null;
+  actorId: string | null;
+  actorRole: string | null;
+  metadata: Record<string, unknown> | null;
+  createdAt: Date;
+}
+
+/**
+ * Timeline entity types.
+ */
+export enum TimelineEntityTypeEnum {
+  RIDER = 'rider',
+  BUSINESS = 'business',
+  CAMPAIGN = 'campaign',
+  ASSIGNMENT = 'assignment',
+}
+
+// === ANALYTICS TYPES (CTX-014) ===
+
+/**
+ * Metric snapshot entity type.
+ */
+export interface MetricSnapshotType {
+  id: string;
+  metric: string;
+  value: number;
+  dimension: string | null;
+  dimensionValue: string | null;
+  period: string;
+  periodStart: Date;
+  createdAt: Date;
+}
+
+/**
+ * Analytics dashboard response type.
+ */
+export interface AnalyticsDashboard {
+  metrics: Array<{
+    metric: string;
+    label: string;
+    value: number;
+    period: string;
+    periodStart: Date;
+  }>;
+}
+
+/**
+ * Analytics event entity type.
+ */
+export interface AnalyticsEventType {
+  id: string;
+  eventType: string;
+  entityType: string | null;
+  entityId: string | null;
+  actorId: string | null;
+  properties: Record<string, unknown> | null;
+  createdAt: Date;
+}
+
+/**
+ * Supported analytics metric codes.
+ */
+export enum MetricCodeEnum {
+  ACTIVE_RIDERS = 'active_riders',
+  ACTIVE_CAMPAIGNS = 'active_campaigns',
+  TOTAL_REVENUE = 'total_revenue',
+  PENDING_PAYOUTS = 'pending_payouts',
+  FULFILLMENT_RATE = 'fulfillment_rate',
+  VERIFICATION_COMPLIANCE = 'verification_compliance',
+  PENDING_APPROVALS = 'pending_approvals',
+  RIDER_GROWTH = 'rider_growth',
+  BUSINESS_GROWTH = 'business_growth',
+  TOTAL_ESCROW_HELD = 'total_escrow_held',
+}
