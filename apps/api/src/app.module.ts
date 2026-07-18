@@ -12,6 +12,10 @@ import { IdentityModule } from './modules/identity/identity.module';
 import { ConfigurationModule } from './modules/configuration/configuration.module';
 import { MediaModule } from './modules/media/media.module';
 import { RiderModule } from './modules/rider/rider.module';
+import { BusinessModule } from './modules/business/business.module';
+import { CampaignModule } from './modules/campaign/campaign.module';
+import { AssignmentModule } from './modules/assignment/assignment.module';
+import { FinanceModule } from './modules/finance/finance.module';
 
 // Global guards
 import { AuthGuard } from './common/guards/auth.guard';
@@ -29,6 +33,16 @@ import { RolesGuard } from './common/guards/roles.guard';
 
     // Feature modules — Sprint 2
     RiderModule,
+
+    // Feature modules — Sprint 3
+    BusinessModule,
+
+    // Feature modules — Sprint 4
+    CampaignModule,
+    AssignmentModule,
+
+    // Feature modules — Sprint 5
+    FinanceModule,
   ],
   controllers: [AppController],
   providers: [

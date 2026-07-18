@@ -255,3 +255,349 @@ model RiderStatusHistory {
 
   @@map("rider_status_history")
 }
+
+
+
+// === BUSINESS MODULE (CTX-003) ===
+
+enum BusinessStatus {
+  REGISTERED
+  DOCUMENTS_PENDING
+  UNDER_REVIEW
+  VERIFIED
+  ACTIVE
+  SUSPENDED
+  BLACKLISTED
+}
+
+model Business {
+  id                 String         @id @default(uuid()) @db.Uuid
+  userId             String         @unique @map("user_id") @db.Uuid
+  status             BusinessStatus @default(REGISTERED)
+  companyName        String?        @map("company_name")
+  legalName          String?        @map("legal_name")
+  panVatNumber       String?        @map("pan_vat_number")
+  address            String?
+  phone              String?
+  website            String?
+  industry           String?
+  contactPersonName  String?        @map("contact_person_name")
+  contactPersonEmail String?        @map("contact_person_email")
+  contactPersonPhone String?        @map("contact_person_phone")
+  regionId           String?        @map("region_id") @db.Uuid
+  zoneId             String?        @map("zone_id") @db.Uuid
+  totalCampaigns     Int            @default(0) @map("total_campaigns")
+  totalSpent         Int            @default(0) @map("total_spent")
+  suspensionReason   String?        @map("suspension_reason")
+  blacklistReason    String?        @map("blacklist_reason")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  updatedAt          DateTime       @updatedAt @map("updated_at")
+  deletedAt          DateTime?      @map("deleted_at")
+
+  documents       BusinessDocument[]
+  statusHistory   BusinessStatusHistory[]
+
+  @@map("business_businesses")
+}
+
+model BusinessDocument {
+  id              String         @id @default(uuid()) @db.Uuid
+  businessId      String         @map("business_id") @db.Uuid
+  documentType    String         @map("document_type")
+  mediaId         String         @map("media_id") @db.Uuid
+  status          DocumentStatus @default(UPLOADED)
+  rejectionReason String?        @map("rejection_reason")
+  reviewedBy      String?        @map("reviewed_by") @db.Uuid
+  reviewedAt      DateTime?      @map("reviewed_at")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("business_documents")
+}
+
+model BusinessStatusHistory {
+  id         String         @id @default(uuid()) @db.Uuid
+  businessId String         @map("business_id") @db.Uuid
+  fromStatus BusinessStatus @map("from_status")
+  toStatus   BusinessStatus @map("to_status")
+  reason     String?
+  changedBy  String?        @map("changed_by") @db.Uuid
+  createdAt  DateTime       @default(now()) @map("created_at")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("business_status_history")
+}
+
+
+
+// === CAMPAIGN MODULE (CTX-004) ===
+
+enum CampaignStatus {
+  DRAFT
+  PENDING_PAYMENT
+  PAYMENT_SUBMITTED
+  PAYMENT_VERIFIED
+  RECRUITING_RIDERS
+  READY
+  RUNNING
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model Campaign {
+  id                String         @id @default(uuid()) @db.Uuid
+  businessId        String         @map("business_id") @db.Uuid
+  name              String
+  status            CampaignStatus @default(DRAFT)
+  targetZones       String[]       @map("target_zones") @db.Uuid
+  requiredRiders    Int            @map("required_riders")
+  currentAssigned   Int            @default(0) @map("current_assigned")
+  fulfillmentPct    Decimal        @default(0) @map("fulfillment_pct") @db.Decimal(5, 2)
+  assetType         String         @default("helmet") @map("asset_type")
+  startDate         DateTime       @map("start_date")
+  endDate           DateTime       @map("end_date")
+  durationDays      Int            @map("duration_days")
+  totalCost         Int            @map("total_cost")
+  dailyRate         Int            @map("daily_rate")
+  riderDailyRate    Int            @map("rider_daily_rate")
+  creativeMediaId   String?        @map("creative_media_id") @db.Uuid
+  cancellationReason String?       @map("cancellation_reason")
+  pauseReason       String?        @map("pause_reason")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+  deletedAt         DateTime?      @map("deleted_at")
+
+  assignments       Assignment[]
+  statusHistory     CampaignStatusHistory[]
+  payment           CampaignPayment?
+
+  @@map("campaign_campaigns")
+}
+
+model CampaignPayment {
+  id              String   @id @default(uuid()) @db.Uuid
+  campaignId      String   @unique @map("campaign_id") @db.Uuid
+  method          String
+  amount          Int
+  referenceId     String   @map("reference_id")
+  paymentDate     DateTime @map("payment_date")
+  proofMediaId    String   @map("proof_media_id") @db.Uuid
+  status          String   @default("submitted")
+  rejectionReason String?  @map("rejection_reason")
+  verifiedBy      String?  @map("verified_by") @db.Uuid
+  verifiedAt      DateTime? @map("verified_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@map("campaign_payments")
+}
+
+model CampaignStatusHistory {
+  id         String         @id @default(uuid()) @db.Uuid
+  campaignId String         @map("campaign_id") @db.Uuid
+  fromStatus CampaignStatus @map("from_status")
+  toStatus   CampaignStatus @map("to_status")
+  reason     String?
+  changedBy  String?        @map("changed_by") @db.Uuid
+  createdAt  DateTime       @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@map("campaign_status_history")
+}
+
+// === ASSIGNMENT MODULE (CTX-005) ===
+
+enum AssignmentStatus {
+  SUGGESTED
+  ASSIGNED
+  STICKER_PENDING
+  DISTRIBUTED
+  INSTALLED
+  ACTIVE
+  COMPLETED
+  REMOVED
+}
+
+model Assignment {
+  id              String           @id @default(uuid()) @db.Uuid
+  campaignId      String           @map("campaign_id") @db.Uuid
+  riderId         String           @map("rider_id") @db.Uuid
+  status          AssignmentStatus @default(ASSIGNED)
+  zoneId          String?          @map("zone_id") @db.Uuid
+  assignedBy      String?          @map("assigned_by") @db.Uuid
+  startDate       DateTime?        @map("start_date")
+  endDate         DateTime?        @map("end_date")
+  daysCompleted   Int              @default(0) @map("days_completed")
+  totalEarnings   Int              @default(0) @map("total_earnings")
+  removalReason   String?          @map("removal_reason")
+  removedBy       String?          @map("removed_by") @db.Uuid
+  removedAt       DateTime?        @map("removed_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+
+  @@unique([campaignId, riderId])
+  @@map("assignment_assignments")
+}
+
+
+
+// === FINANCIAL PLATFORM MODULE (CTX-007) ===
+
+enum LedgerAccountType {
+  ACCOUNTS_RECEIVABLE
+  CAMPAIGN_ESCROW
+  PLATFORM_REVENUE
+  RIDER_LIABILITY
+  RIDER_PAYOUT
+}
+
+enum LedgerEntryType {
+  DEBIT
+  CREDIT
+}
+
+model LedgerEntry {
+  id            String           @id @default(uuid()) @db.Uuid
+  accountType   LedgerAccountType @map("account_type")
+  entryType     LedgerEntryType  @map("entry_type")
+  amount        Int              // in paisa (NPR × 100)
+  currency      String           @default("NPR")
+  description   String
+  referenceType String?          @map("reference_type") // campaign, assignment, payout
+  referenceId   String?          @map("reference_id") @db.Uuid
+  balanceAfter  Int?             @map("balance_after") // derived snapshot (optional)
+  createdAt     DateTime         @default(now()) @map("created_at")
+  createdBy     String?          @map("created_by") @db.Uuid
+
+  // IMMUTABLE: No updatedAt — ledger entries cannot be modified
+  @@map("finance_ledger_entries")
+}
+
+model Escrow {
+  id              String   @id @default(uuid()) @db.Uuid
+  campaignId      String   @unique @map("campaign_id") @db.Uuid
+  totalAmount     Int      @map("total_amount") // in paisa
+  releasedAmount  Int      @default(0) @map("released_amount")
+  refundedAmount  Int      @default(0) @map("refunded_amount")
+  remainingAmount Int      @map("remaining_amount") // computed: total - released - refunded
+  totalDays       Int      @map("total_days")
+  dailyRelease    Int      @map("daily_release") // total / days
+  daysReleased    Int      @default(0) @map("days_released")
+  status          String   @default("active") // active, completed, refunded, cancelled
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  closedAt        DateTime? @map("closed_at")
+
+  releases EscrowRelease[]
+
+  @@map("finance_escrows")
+}
+
+model EscrowRelease {
+  id         String   @id @default(uuid()) @db.Uuid
+  escrowId   String   @map("escrow_id") @db.Uuid
+  dayNumber  Int      @map("day_number")
+  amount     Int      // daily release amount in paisa
+  commission Int      // platform commission portion
+  riderShare Int      @map("rider_share") // rider portion
+  releasedAt DateTime @default(now()) @map("released_at")
+
+  escrow Escrow @relation(fields: [escrowId], references: [id])
+
+  @@unique([escrowId, dayNumber])
+  @@map("finance_escrow_releases")
+}
+
+model RiderWallet {
+  id           String   @id @default(uuid()) @db.Uuid
+  riderId      String   @unique @map("rider_id") @db.Uuid
+  balance      Int      @default(0) // in paisa — derived from transactions
+  totalEarned  Int      @default(0) @map("total_earned")
+  totalPaidOut Int      @default(0) @map("total_paid_out")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  transactions WalletTransaction[]
+
+  @@map("finance_rider_wallets")
+}
+
+model WalletTransaction {
+  id          String   @id @default(uuid()) @db.Uuid
+  walletId    String   @map("wallet_id") @db.Uuid
+  type        String   // credit (earning) or debit (payout)
+  amount      Int      // in paisa
+  description String
+  referenceType String? @map("reference_type") // assignment, payout_batch
+  referenceId String?  @map("reference_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  wallet RiderWallet @relation(fields: [walletId], references: [id])
+
+  @@map("finance_wallet_transactions")
+}
+
+model PayoutBatch {
+  id           String   @id @default(uuid()) @db.Uuid
+  cycleDate    DateTime @map("cycle_date")
+  riderCount   Int      @map("rider_count")
+  totalAmount  Int      @map("total_amount") // sum of all items in paisa
+  status       String   @default("generated") // generated, approved, processing, completed, failed
+  generatedBy  String?  @map("generated_by") @db.Uuid
+  approvedBy   String?  @map("approved_by") @db.Uuid
+  approvedAt   DateTime? @map("approved_at")
+  completedAt  DateTime? @map("completed_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  items PayoutItem[]
+
+  @@map("finance_payout_batches")
+}
+
+model PayoutItem {
+  id            String   @id @default(uuid()) @db.Uuid
+  batchId       String   @map("batch_id") @db.Uuid
+  riderId       String   @map("rider_id") @db.Uuid
+  walletId      String   @map("wallet_id") @db.Uuid
+  amount        Int      // in paisa
+  method        String   // esewa, khalti, bank_transfer, ime_pay
+  accountDetail String?  @map("account_detail") // masked account info
+  status        String   @default("pending") // pending, completed, failed
+  proofMediaId  String?  @map("proof_media_id") @db.Uuid
+  referenceId   String?  @map("reference_id") // external transaction ref
+  completedAt   DateTime? @map("completed_at")
+  failureReason String?  @map("failure_reason")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  batch PayoutBatch @relation(fields: [batchId], references: [id])
+
+  @@map("finance_payout_items")
+}
+
+model Invoice {
+  id            String   @id @default(uuid()) @db.Uuid
+  invoiceNumber String   @unique @map("invoice_number")
+  businessId    String   @map("business_id") @db.Uuid
+  campaignId    String   @map("campaign_id") @db.Uuid
+  amount        Int      // in paisa
+  taxAmount     Int      @default(0) @map("tax_amount")
+  totalAmount   Int      @map("total_amount")
+  status        String   @default("issued") // issued, paid
+  issuedAt      DateTime @default(now()) @map("issued_at")
+  paidAt        DateTime? @map("paid_at")
+  lineItems     Json     @map("line_items") // [{description, qty, rate, amount}]
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("finance_invoices")
+}

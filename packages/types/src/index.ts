@@ -319,3 +319,374 @@ export interface RiderDashboard {
   reliabilityScore: ReliabilityScoreType | null;
   activeCampaign: null; // Sprint 4 — placeholder
 }
+
+
+
+// === BUSINESS TYPES (CTX-003) ===
+
+/**
+ * Business lifecycle status — state machine for business onboarding and operations.
+ */
+export enum BusinessStatus {
+  REGISTERED = 'REGISTERED',
+  DOCUMENTS_PENDING = 'DOCUMENTS_PENDING',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  VERIFIED = 'VERIFIED',
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  BLACKLISTED = 'BLACKLISTED',
+}
+
+/**
+ * Business profile information.
+ */
+export interface BusinessProfile {
+  id: string;
+  userId: string;
+  status: BusinessStatus;
+  companyName: string | null;
+  legalName: string | null;
+  panVatNumber: string | null;
+  address: string | null;
+  phone: string | null;
+  website: string | null;
+  industry: string | null;
+  contactPersonName: string | null;
+  contactPersonEmail: string | null;
+  contactPersonPhone: string | null;
+  regionId: string | null;
+  zoneId: string | null;
+  totalCampaigns: number;
+  totalSpent: number;
+  suspensionReason: string | null;
+  blacklistReason: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Business document metadata.
+ */
+export interface BusinessDocumentType {
+  id: string;
+  businessId: string;
+  documentType: string;
+  mediaId: string;
+  status: DocumentStatus;
+  rejectionReason: string | null;
+  reviewedBy: string | null;
+  reviewedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Business dashboard aggregation response.
+ */
+export interface BusinessDashboard {
+  business: {
+    id: string;
+    status: BusinessStatus;
+    companyName: string | null;
+    totalCampaigns: number;
+    totalSpent: number;
+  };
+  documentsCount: number;
+  pendingDocuments: number;
+  activeCampaigns: number; // Sprint 4 — placeholder
+}
+
+/**
+ * Business status transition history record.
+ */
+export interface BusinessStatusHistoryType {
+  id: string;
+  businessId: string;
+  fromStatus: BusinessStatus;
+  toStatus: BusinessStatus;
+  reason: string | null;
+  changedBy: string | null;
+  createdAt: Date;
+}
+
+
+
+// === CAMPAIGN TYPES (CTX-004) ===
+
+/**
+ * Campaign lifecycle status — state machine for campaign operations.
+ */
+export enum CampaignStatus {
+  DRAFT = 'DRAFT',
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
+  PAYMENT_SUBMITTED = 'PAYMENT_SUBMITTED',
+  PAYMENT_VERIFIED = 'PAYMENT_VERIFIED',
+  RECRUITING_RIDERS = 'RECRUITING_RIDERS',
+  READY = 'READY',
+  RUNNING = 'RUNNING',
+  PAUSED = 'PAUSED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+/**
+ * Campaign domain entity.
+ */
+export interface CampaignType {
+  id: string;
+  businessId: string;
+  name: string;
+  status: CampaignStatus;
+  targetZones: string[];
+  requiredRiders: number;
+  currentAssigned: number;
+  fulfillmentPct: number;
+  assetType: string;
+  startDate: Date;
+  endDate: Date;
+  durationDays: number;
+  totalCost: number;
+  dailyRate: number;
+  riderDailyRate: number;
+  creativeMediaId: string | null;
+  cancellationReason: string | null;
+  pauseReason: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+}
+
+/**
+ * Campaign payment proof submitted by business.
+ */
+export interface CampaignPaymentType {
+  id: string;
+  campaignId: string;
+  method: string;
+  amount: number;
+  referenceId: string;
+  paymentDate: Date;
+  proofMediaId: string;
+  status: string;
+  rejectionReason: string | null;
+  verifiedBy: string | null;
+  verifiedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Campaign status transition history record.
+ */
+export interface CampaignStatusHistoryType {
+  id: string;
+  campaignId: string;
+  fromStatus: CampaignStatus;
+  toStatus: CampaignStatus;
+  reason: string | null;
+  changedBy: string | null;
+  createdAt: Date;
+}
+
+// === ASSIGNMENT TYPES (CTX-005) ===
+
+/**
+ * Assignment lifecycle status — state machine for rider-campaign assignments.
+ */
+export enum AssignmentStatus {
+  SUGGESTED = 'SUGGESTED',
+  ASSIGNED = 'ASSIGNED',
+  STICKER_PENDING = 'STICKER_PENDING',
+  DISTRIBUTED = 'DISTRIBUTED',
+  INSTALLED = 'INSTALLED',
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  REMOVED = 'REMOVED',
+}
+
+/**
+ * Assignment domain entity — links riders to campaigns.
+ */
+export interface AssignmentType {
+  id: string;
+  campaignId: string;
+  riderId: string;
+  status: AssignmentStatus;
+  zoneId: string | null;
+  assignedBy: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  daysCompleted: number;
+  totalEarnings: number;
+  removalReason: string | null;
+  removedBy: string | null;
+  removedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+
+// === FINANCIAL PLATFORM TYPES (CTX-007) ===
+
+/**
+ * Ledger account types — the five fundamental accounts in the platform.
+ */
+export enum LedgerAccountType {
+  ACCOUNTS_RECEIVABLE = 'ACCOUNTS_RECEIVABLE',
+  CAMPAIGN_ESCROW = 'CAMPAIGN_ESCROW',
+  PLATFORM_REVENUE = 'PLATFORM_REVENUE',
+  RIDER_LIABILITY = 'RIDER_LIABILITY',
+  RIDER_PAYOUT = 'RIDER_PAYOUT',
+}
+
+/**
+ * Ledger entry types — double-entry bookkeeping.
+ */
+export enum LedgerEntryType {
+  DEBIT = 'DEBIT',
+  CREDIT = 'CREDIT',
+}
+
+/**
+ * Ledger entry record.
+ */
+export interface LedgerEntryRecord {
+  id: string;
+  accountType: LedgerAccountType;
+  entryType: LedgerEntryType;
+  amount: number;
+  currency: string;
+  description: string;
+  referenceType: string | null;
+  referenceId: string | null;
+  balanceAfter: number | null;
+  createdAt: Date;
+  createdBy: string | null;
+}
+
+/**
+ * Escrow for campaign fund management.
+ */
+export interface EscrowType {
+  id: string;
+  campaignId: string;
+  totalAmount: number;
+  releasedAmount: number;
+  refundedAmount: number;
+  remainingAmount: number;
+  totalDays: number;
+  dailyRelease: number;
+  daysReleased: number;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  closedAt: Date | null;
+}
+
+/**
+ * Rider wallet for tracking earnings.
+ */
+export interface RiderWalletType {
+  id: string;
+  riderId: string;
+  balance: number;
+  totalEarned: number;
+  totalPaidOut: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Wallet transaction record.
+ */
+export interface WalletTransactionType {
+  id: string;
+  walletId: string;
+  type: string;
+  amount: number;
+  description: string;
+  referenceType: string | null;
+  referenceId: string | null;
+  createdAt: Date;
+}
+
+/**
+ * Payout batch for batch processing rider payments.
+ */
+export interface PayoutBatchType {
+  id: string;
+  cycleDate: Date;
+  riderCount: number;
+  totalAmount: number;
+  status: string;
+  generatedBy: string | null;
+  approvedBy: string | null;
+  approvedAt: Date | null;
+  completedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Individual payout item within a batch.
+ */
+export interface PayoutItemType {
+  id: string;
+  batchId: string;
+  riderId: string;
+  walletId: string;
+  amount: number;
+  method: string;
+  accountDetail: string | null;
+  status: string;
+  proofMediaId: string | null;
+  referenceId: string | null;
+  completedAt: Date | null;
+  failureReason: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Invoice for campaign payments.
+ */
+export interface InvoiceType {
+  id: string;
+  invoiceNumber: string;
+  businessId: string;
+  campaignId: string;
+  amount: number;
+  taxAmount: number;
+  totalAmount: number;
+  status: string;
+  issuedAt: Date;
+  paidAt: Date | null;
+  lineItems: Array<{ description: string; qty: number; rate: number; amount: number }>;
+  createdAt: Date;
+}
+
+/**
+ * Reconciliation report — balance verification and discrepancy detection.
+ */
+export interface ReconciliationReport {
+  totalDebits: number;
+  totalCredits: number;
+  isBalanced: boolean;
+  accountBalances: Record<string, number>;
+  escrowDiscrepancies: Array<{
+    escrowId: string;
+    campaignId: string;
+    expectedReleased: number;
+    actualReleased: number;
+    difference: number;
+  }>;
+  walletDiscrepancies: Array<{
+    walletId: string;
+    riderId: string;
+    storedBalance: number;
+    computedBalance: number;
+    difference: number;
+  }>;
+  generatedAt: Date;
+}
