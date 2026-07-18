@@ -1,62 +1,76 @@
 /**
- * API client with auth headers for admin panel.
- * Uses placeholder fetch — real implementation will connect to the API gateway.
+ * Admin Panel — API Client
+ * Configured with SDK for authenticated admin requests with automatic token refresh.
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+import { createApiClient, ApiClient } from '@soloadvertiser/sdk';
 
-interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  body?: unknown;
-  headers?: Record<string, string>;
-  params?: Record<string, string | number | undefined>;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/v1';
+const TOKEN_KEY = 'admin_access_token';
+const REFRESH_KEY = 'admin_refresh_token';
+
+function getStoredToken(key: string): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  return localStorage.getItem(key) || undefined;
 }
 
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('admin_token');
+function storeTokens(accessToken: string, refreshToken: string): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(TOKEN_KEY, accessToken);
+  localStorage.setItem(REFRESH_KEY, refreshToken);
 }
 
-function buildUrl(path: string, params?: Record<string, string | number | undefined>): string {
-  const url = new URL(`${API_BASE}${path}`);
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined) {
-        url.searchParams.set(key, String(value));
-      }
-    });
-  }
-  return url.toString();
-}
-
-export async function apiClient<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { method = 'GET', body, headers = {}, params } = options;
-  const token = getAuthToken();
-
-  const response = await fetch(buildUrl(path, params), {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
+/**
+ * Creates an authenticated SDK client for the admin panel.
+ * Reads tokens from localStorage and persists refreshed tokens automatically.
+ */
+export function createAdminClient(): ApiClient {
+  return createApiClient({
+    baseUrl: API_BASE_URL,
+    accessToken: getStoredToken(TOKEN_KEY),
+    refreshToken: getStoredToken(REFRESH_KEY),
+    onTokenRefresh: ({ accessToken, refreshToken }) => {
+      storeTokens(accessToken, refreshToken);
     },
-    ...(body ? { body: JSON.stringify(body) } : {}),
   });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Request failed' }));
-    throw new Error(error.message || `HTTP ${response.status}`);
-  }
-
-  return response.json();
 }
 
-// Convenience methods
-export const api = {
-  get: <T>(path: string, params?: Record<string, string | number | undefined>) =>
-    apiClient<T>(path, { params }),
-  post: <T>(path: string, body: unknown) => apiClient<T>(path, { method: 'POST', body }),
-  put: <T>(path: string, body: unknown) => apiClient<T>(path, { method: 'PUT', body }),
-  patch: <T>(path: string, body: unknown) => apiClient<T>(path, { method: 'PATCH', body }),
-  delete: <T>(path: string) => apiClient<T>(path, { method: 'DELETE' }),
-};
+/**
+ * Singleton client instance for use across the admin app.
+ * Re-initialize after login to inject new tokens.
+ */
+let _client: ApiClient | null = null;
+
+export function getAdminClient(): ApiClient {
+  if (!_client) {
+    _client = createAdminClient();
+  }
+  return _client;
+}
+
+export function resetAdminClient(): void {
+  _client = null;
+}
+
+/**
+ * Set tokens after successful login and reinitialize client.
+ */
+export function setAdminAuth(accessToken: string, refreshToken: string): void {
+  storeTokens(accessToken, refreshToken);
+  _client = createAdminClient();
+}
+
+/**
+ * Clear auth state and redirect to login.
+ */
+export function clearAdminAuth(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_KEY);
+  _client = null;
+  window.location.href = '/login';
+}
+
+// Re-export types for convenience
+export type { ApiResponse, PaginatedResponse, ApiClientConfig } from '@soloadvertiser/sdk';
+export { ApiError, TokenExpiredError } from '@soloadvertiser/sdk';

@@ -1,25 +1,11 @@
 /**
- * Solo Advertiser SDK — Public API client (placeholder).
+ * Solo Advertiser SDK — Typed API Client
  *
- * This package will provide a typed SDK for external integrations
- * with the Solo Advertiser platform API.
+ * Full-featured HTTP client for interacting with the Solo Advertiser platform API.
+ * Includes automatic token refresh, typed responses, and comprehensive endpoint coverage.
  */
 
-export const SDK_VERSION = '0.0.0';
-
-export interface SdkConfig {
-  baseUrl: string;
-  apiKey: string;
-  timeout?: number;
-}
-
-/**
- * Placeholder SDK client class.
- */
-export class SoloAdvertiserSdk {
-  constructor(private readonly config: SdkConfig) {}
-
-  getConfig(): SdkConfig {
-    return { ...this.config };
-  }
-}
+export { ApiClient, createApiClient } from './client';
+export type { ApiClientConfig, ApiResponse, PaginatedResponse, RequestOptions } from './types';
+export { ApiError, NetworkError, TokenExpiredError } from './types';
+export * from './endpoints';

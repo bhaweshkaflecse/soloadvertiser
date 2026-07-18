@@ -1,122 +1,76 @@
-// Solo Advertiser — Business Portal
-// API client with authentication and error handling
-// Wraps fetch with JWT token management
+/**
+ * Business Portal — API Client
+ * Configured with SDK for authenticated business requests with automatic token refresh.
+ */
+
+import { createApiClient, ApiClient } from '@soloadvertiser/sdk';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/v1';
+const TOKEN_KEY = 'access_token';
+const REFRESH_KEY = 'refresh_token';
 
-interface RequestOptions extends RequestInit {
-  params?: Record<string, string>;
+function getStoredToken(key: string): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  return localStorage.getItem(key) || undefined;
 }
 
-class ApiClient {
-  private baseUrl: string;
-
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
-
-  private getToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('access_token');
-  }
-
-  private async request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const { params, ...fetchOptions } = options;
-
-    let url = `${this.baseUrl}${path}`;
-    if (params) {
-      const searchParams = new URLSearchParams(params);
-      url += `?${searchParams.toString()}`;
-    }
-
-    const token = this.getToken();
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers as Record<string, string> || {}),
-    };
-
-    const response = await fetch(url, {
-      ...fetchOptions,
-      headers,
-    });
-
-    if (response.status === 401) {
-      // Token expired — attempt refresh or redirect to login
-      const refreshed = await this.refreshToken();
-      if (refreshed) {
-        return this.request<T>(path, options);
-      }
-      window.location.href = '/login';
-      throw new Error('Session expired');
-    }
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(error.message || `HTTP ${response.status}`);
-    }
-
-    return response.json();
-  }
-
-  private async refreshToken(): Promise<boolean> {
-    const refreshToken = localStorage.getItem('refresh_token');
-    if (!refreshToken) return false;
-
-    try {
-      const response = await fetch(`${this.baseUrl}/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('access_token', data.accessToken);
-        localStorage.setItem('refresh_token', data.refreshToken);
-        return true;
-      }
-      return false;
-    } catch {
-      return false;
-    }
-  }
-
-  get<T>(path: string, params?: Record<string, string>): Promise<T> {
-    return this.request<T>(path, { method: 'GET', params });
-  }
-
-  post<T>(path: string, data?: unknown): Promise<T> {
-    return this.request<T>(path, { method: 'POST', body: JSON.stringify(data) });
-  }
-
-  put<T>(path: string, data?: unknown): Promise<T> {
-    return this.request<T>(path, { method: 'PUT', body: JSON.stringify(data) });
-  }
-
-  patch<T>(path: string, data?: unknown): Promise<T> {
-    return this.request<T>(path, { method: 'PATCH', body: JSON.stringify(data) });
-  }
-
-  delete<T>(path: string): Promise<T> {
-    return this.request<T>(path, { method: 'DELETE' });
-  }
-
-  async upload<T>(path: string, formData: FormData): Promise<T> {
-    const token = this.getToken();
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      method: 'POST',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Upload failed: ${response.status}`);
-    }
-
-    return response.json();
-  }
+function storeTokens(accessToken: string, refreshToken: string): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(TOKEN_KEY, accessToken);
+  localStorage.setItem(REFRESH_KEY, refreshToken);
 }
 
-export const apiClient = new ApiClient(API_BASE_URL);
-export default apiClient;
+/**
+ * Creates an authenticated SDK client for the business portal.
+ * Reads tokens from localStorage and persists refreshed tokens automatically.
+ */
+export function createBusinessClient(): ApiClient {
+  return createApiClient({
+    baseUrl: API_BASE_URL,
+    accessToken: getStoredToken(TOKEN_KEY),
+    refreshToken: getStoredToken(REFRESH_KEY),
+    onTokenRefresh: ({ accessToken, refreshToken }) => {
+      storeTokens(accessToken, refreshToken);
+    },
+  });
+}
+
+/**
+ * Singleton client instance for use across the business portal.
+ * Re-initialize after login to inject new tokens.
+ */
+let _client: ApiClient | null = null;
+
+export function getBusinessClient(): ApiClient {
+  if (!_client) {
+    _client = createBusinessClient();
+  }
+  return _client;
+}
+
+export function resetBusinessClient(): void {
+  _client = null;
+}
+
+/**
+ * Set tokens after successful login and reinitialize client.
+ */
+export function setBusinessAuth(accessToken: string, refreshToken: string): void {
+  storeTokens(accessToken, refreshToken);
+  _client = createBusinessClient();
+}
+
+/**
+ * Clear auth state and redirect to login.
+ */
+export function clearBusinessAuth(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_KEY);
+  _client = null;
+  window.location.href = '/login';
+}
+
+// Re-export types for convenience
+export type { ApiResponse, PaginatedResponse, ApiClientConfig } from '@soloadvertiser/sdk';
+export { ApiError, TokenExpiredError } from '@soloadvertiser/sdk';
