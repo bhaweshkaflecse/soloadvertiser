@@ -1,5 +1,5 @@
 // Prisma Schema — Solo Advertiser
-// Models will be added in subsequent feature sprints.
+// Sprint 1: Identity, Configuration, and Media models
 
 generator client {
   provider = "prisma-client-js"
@@ -8,4 +8,119 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// === IDENTITY MODULE (CTX-001) ===
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  OPERATIONS_STAFF
+  FINANCE_STAFF
+  BUSINESS
+  RIDER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DEACTIVATED
+}
+
+model User {
+  id             String     @id @default(uuid()) @db.Uuid
+  email          String?    @unique
+  phone          String?    @unique
+  passwordHash   String?    @map("password_hash")
+  role           Role       @default(RIDER)
+  status         UserStatus @default(ACTIVE)
+  emailVerified  Boolean    @default(false) @map("email_verified")
+  phoneVerified  Boolean    @default(false) @map("phone_verified")
+  failedAttempts Int        @default(0) @map("failed_attempts")
+  lockedUntil    DateTime?  @map("locked_until")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+  deletedAt      DateTime?  @map("deleted_at")
+
+  sessions Session[]
+
+  @@map("identity_users")
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  deviceInfo   String?  @map("device_info")
+  ipAddress    String?  @map("ip_address")
+  refreshToken String   @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("identity_sessions")
+}
+
+// === CONFIGURATION MODULE (CTX-009) ===
+
+model ConfigEntry {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique
+  value       Json
+  category    String
+  description String?
+  dataType    String   @map("data_type")
+  updatedBy   String?  @map("updated_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("config_entries")
+}
+
+model FeatureFlag {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique
+  enabled     Boolean  @default(false)
+  description String?
+  updatedBy   String?  @map("updated_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("config_feature_flags")
+}
+
+model DictionaryItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  dictionary  String
+  code        String
+  label       String
+  description String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  isActive    Boolean  @default(true) @map("is_active")
+  metadata    Json?
+  regionId    String?  @map("region_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([dictionary, code])
+  @@map("config_dictionary_items")
+}
+
+// === MEDIA MODULE (CTX-012) ===
+
+model MediaAsset {
+  id         String    @id @default(uuid()) @db.Uuid
+  filename   String
+  mimeType   String    @map("mime_type")
+  size       Int
+  bucket     String
+  key        String
+  url        String?
+  entityType String?   @map("entity_type")
+  entityId   String?   @map("entity_id") @db.Uuid
+  uploadedBy String    @map("uploaded_by") @db.Uuid
+  createdAt  DateTime  @default(now()) @map("created_at")
+  deletedAt  DateTime? @map("deleted_at")
+
+  @@map("media_assets")
 }

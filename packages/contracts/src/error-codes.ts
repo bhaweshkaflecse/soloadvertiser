@@ -1,6 +1,6 @@
 /**
  * Domain-prefixed error code constants.
- * Structure only — codes will be populated as features are implemented.
+ * Organized by module for clear ownership.
  */
 export const ERROR_CODES = {
   AUTH: {
@@ -8,6 +8,12 @@ export const ERROR_CODES = {
     FORBIDDEN: 'AUTH_002',
     TOKEN_EXPIRED: 'AUTH_003',
     INVALID_CREDENTIALS: 'AUTH_004',
+    ACCOUNT_LOCKED: 'AUTH_005',
+    EMAIL_ALREADY_EXISTS: 'AUTH_006',
+    PHONE_ALREADY_EXISTS: 'AUTH_007',
+    INVALID_OTP: 'AUTH_008',
+    OTP_EXPIRED: 'AUTH_009',
+    SESSION_NOT_FOUND: 'AUTH_010',
   },
   VALIDATION: {
     INVALID_INPUT: 'VAL_001',
@@ -17,6 +23,20 @@ export const ERROR_CODES = {
     NOT_FOUND: 'RES_001',
     ALREADY_EXISTS: 'RES_002',
     CONFLICT: 'RES_003',
+  },
+  CONFIG: {
+    KEY_NOT_FOUND: 'CONFIG_001',
+    INVALID_VALUE_TYPE: 'CONFIG_002',
+    DICTIONARY_NOT_FOUND: 'CONFIG_003',
+    DUPLICATE_DICTIONARY_ENTRY: 'CONFIG_004',
+    FLAG_NOT_FOUND: 'CONFIG_005',
+  },
+  MEDIA: {
+    FILE_TOO_LARGE: 'MEDIA_001',
+    UNSUPPORTED_TYPE: 'MEDIA_002',
+    UPLOAD_FAILED: 'MEDIA_003',
+    ASSET_NOT_FOUND: 'MEDIA_004',
+    STORAGE_ERROR: 'MEDIA_005',
   },
   SYSTEM: {
     INTERNAL_ERROR: 'SYS_001',
