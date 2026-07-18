@@ -181,3 +181,141 @@ export interface MediaAssetType {
   createdAt: Date;
   deletedAt: Date | null;
 }
+
+
+// === RIDER TYPES (CTX-002) ===
+
+/**
+ * Rider lifecycle status — state machine for rider onboarding and operations.
+ */
+export enum RiderStatus {
+  PRE_REGISTERED = 'PRE_REGISTERED',
+  DOCUMENTS_PENDING = 'DOCUMENTS_PENDING',
+  VERIFICATION_PENDING = 'VERIFICATION_PENDING',
+  APPROVED = 'APPROVED',
+  AVAILABLE = 'AVAILABLE',
+  ASSIGNED = 'ASSIGNED',
+  CAMPAIGN_ACTIVE = 'CAMPAIGN_ACTIVE',
+  UNAVAILABLE = 'UNAVAILABLE',
+  SUSPENDED = 'SUSPENDED',
+}
+
+/**
+ * Document review status for rider documents.
+ */
+export enum DocumentStatus {
+  UPLOADED = 'UPLOADED',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  EXPIRED = 'EXPIRED',
+  REPLACEMENT_REQUIRED = 'REPLACEMENT_REQUIRED',
+}
+
+/**
+ * Rider profile information.
+ */
+export interface RiderProfile {
+  id: string;
+  userId: string;
+  status: RiderStatus;
+  fullName: string | null;
+  dateOfBirth: Date | null;
+  address: string | null;
+  emergencyName: string | null;
+  emergencyPhone: string | null;
+  profilePhotoId: string | null;
+  zoneId: string | null;
+  regionId: string | null;
+  reliabilityScore: number;
+  totalCampaigns: number;
+  totalEarnings: number;
+  suspensionReason: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Rider vehicle details.
+ */
+export interface RiderVehicleType {
+  id: string;
+  riderId: string;
+  vehicleType: string;
+  registrationNumber: string;
+  color: string | null;
+  makeModel: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Rider document metadata.
+ */
+export interface RiderDocumentType {
+  id: string;
+  riderId: string;
+  documentType: string;
+  mediaId: string;
+  status: DocumentStatus;
+  rejectionReason: string | null;
+  expiryDate: Date | null;
+  reviewedBy: string | null;
+  reviewedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Rider advertising asset (e.g., helmet surface).
+ */
+export interface RiderAssetType {
+  id: string;
+  riderId: string;
+  assetType: string;
+  description: string | null;
+  isVerified: boolean;
+  mediaId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * 5-component reliability score with weighted composite.
+ */
+export interface ReliabilityScoreType {
+  id: string;
+  riderId: string;
+  verification: number;
+  attendance: number;
+  activity: number;
+  completion: number;
+  response: number;
+  compositeScore: number;
+  computedAt: Date;
+}
+
+/**
+ * Rider status transition history record.
+ */
+export interface RiderStatusHistoryType {
+  id: string;
+  riderId: string;
+  fromStatus: RiderStatus;
+  toStatus: RiderStatus;
+  reason: string | null;
+  changedBy: string | null;
+  createdAt: Date;
+}
+
+/**
+ * Rider dashboard aggregation response.
+ */
+export interface RiderDashboard {
+  rider: RiderProfile;
+  vehicle: RiderVehicleType | null;
+  documentsCount: number;
+  pendingDocuments: number;
+  reliabilityScore: ReliabilityScoreType | null;
+  activeCampaign: null; // Sprint 4 — placeholder
+}

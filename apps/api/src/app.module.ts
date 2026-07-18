@@ -11,6 +11,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { IdentityModule } from './modules/identity/identity.module';
 import { ConfigurationModule } from './modules/configuration/configuration.module';
 import { MediaModule } from './modules/media/media.module';
+import { RiderModule } from './modules/rider/rider.module';
 
 // Global guards
 import { AuthGuard } from './common/guards/auth.guard';
@@ -25,6 +26,9 @@ import { RolesGuard } from './common/guards/roles.guard';
     IdentityModule,
     ConfigurationModule,
     MediaModule,
+
+    // Feature modules — Sprint 2
+    RiderModule,
   ],
   controllers: [AppController],
   providers: [

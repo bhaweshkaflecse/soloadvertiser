@@ -124,3 +124,134 @@ model MediaAsset {
 
   @@map("media_assets")
 }
+
+
+// === RIDER MODULE (CTX-002) ===
+
+enum RiderStatus {
+  PRE_REGISTERED
+  DOCUMENTS_PENDING
+  VERIFICATION_PENDING
+  APPROVED
+  AVAILABLE
+  ASSIGNED
+  CAMPAIGN_ACTIVE
+  UNAVAILABLE
+  SUSPENDED
+}
+
+enum DocumentStatus {
+  UPLOADED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  EXPIRED
+  REPLACEMENT_REQUIRED
+}
+
+model Rider {
+  id              String       @id @default(uuid()) @db.Uuid
+  userId          String       @unique @map("user_id") @db.Uuid
+  status          RiderStatus  @default(PRE_REGISTERED)
+  fullName        String?      @map("full_name")
+  dateOfBirth     DateTime?    @map("date_of_birth")
+  address         String?
+  emergencyName   String?      @map("emergency_name")
+  emergencyPhone  String?      @map("emergency_phone")
+  profilePhotoId  String?      @map("profile_photo_id") @db.Uuid
+  zoneId          String?      @map("zone_id") @db.Uuid
+  regionId        String?      @map("region_id") @db.Uuid
+  reliabilityScore Int         @default(0) @map("reliability_score")
+  totalCampaigns  Int          @default(0) @map("total_campaigns")
+  totalEarnings   Int          @default(0) @map("total_earnings")
+  suspensionReason String?     @map("suspension_reason")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  deletedAt       DateTime?    @map("deleted_at")
+
+  vehicle         RiderVehicle?
+  documents       RiderDocument[]
+  assets          RiderAsset[]
+  reliabilityScores ReliabilityScore[]
+  statusHistory   RiderStatusHistory[]
+
+  @@map("rider_riders")
+}
+
+model RiderVehicle {
+  id                 String   @id @default(uuid()) @db.Uuid
+  riderId            String   @unique @map("rider_id") @db.Uuid
+  vehicleType        String   @default("motorcycle") @map("vehicle_type")
+  registrationNumber String   @map("registration_number")
+  color              String?
+  makeModel          String?  @map("make_model")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  rider Rider @relation(fields: [riderId], references: [id])
+
+  @@map("rider_vehicles")
+}
+
+model RiderDocument {
+  id            String         @id @default(uuid()) @db.Uuid
+  riderId       String         @map("rider_id") @db.Uuid
+  documentType  String         @map("document_type")
+  mediaId       String         @map("media_id") @db.Uuid
+  status        DocumentStatus @default(UPLOADED)
+  rejectionReason String?      @map("rejection_reason")
+  expiryDate    DateTime?      @map("expiry_date")
+  reviewedBy    String?        @map("reviewed_by") @db.Uuid
+  reviewedAt    DateTime?      @map("reviewed_at")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  rider Rider @relation(fields: [riderId], references: [id])
+
+  @@map("rider_documents")
+}
+
+model RiderAsset {
+  id           String   @id @default(uuid()) @db.Uuid
+  riderId      String   @map("rider_id") @db.Uuid
+  assetType    String   @default("helmet") @map("asset_type")
+  description  String?
+  isVerified   Boolean  @default(false) @map("is_verified")
+  mediaId      String?  @map("media_id") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  rider Rider @relation(fields: [riderId], references: [id])
+
+  @@map("rider_assets")
+}
+
+model ReliabilityScore {
+  id              String   @id @default(uuid()) @db.Uuid
+  riderId         String   @map("rider_id") @db.Uuid
+  verification    Int      @default(0)
+  attendance      Int      @default(0)
+  activity        Int      @default(0)
+  completion      Int      @default(0)
+  response        Int      @default(0)
+  compositeScore  Int      @default(0) @map("composite_score")
+  computedAt      DateTime @default(now()) @map("computed_at")
+
+  rider Rider @relation(fields: [riderId], references: [id])
+
+  @@map("rider_reliability_scores")
+}
+
+model RiderStatusHistory {
+  id         String      @id @default(uuid()) @db.Uuid
+  riderId    String      @map("rider_id") @db.Uuid
+  fromStatus RiderStatus @map("from_status")
+  toStatus   RiderStatus @map("to_status")
+  reason     String?
+  changedBy  String?     @map("changed_by") @db.Uuid
+  createdAt  DateTime    @default(now()) @map("created_at")
+
+  rider Rider @relation(fields: [riderId], references: [id])
+
+  @@map("rider_status_history")
+}
