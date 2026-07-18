@@ -1,0 +1,23 @@
+# Solo Advertiser — Code Owners
+# Each line is a file pattern followed by one or more owners.
+
+# Global ownership
+* @bhaweshkaflecse
+
+# Infrastructure
+infrastructure/ @bhaweshkaflecse
+docker-compose* @bhaweshkaflecse
+.github/ @bhaweshkaflecse
+
+# API
+apps/api/ @bhaweshkaflecse
+
+# Frontend applications
+apps/admin-web/ @bhaweshkaflecse
+apps/business-web/ @bhaweshkaflecse
+
+# Shared packages
+packages/ @bhaweshkaflecse
+
+# Documentation
+docs/ @bhaweshkaflecse
