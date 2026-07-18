@@ -840,3 +840,172 @@ export enum MetricCodeEnum {
   BUSINESS_GROWTH = 'business_growth',
   TOTAL_ESCROW_HELD = 'total_escrow_held',
 }
+
+
+
+// === MARKETPLACE TYPES (CTX-015) ===
+
+/**
+ * Channel Maturity Model stages.
+ */
+export enum ChannelMaturity {
+  CMM_001_MARKET_RESEARCH = 'CMM_001_MARKET_RESEARCH',
+  CMM_002_PRE_ORDER_OPEN = 'CMM_002_PRE_ORDER_OPEN',
+  CMM_003_PRE_ENROLLMENT_OPEN = 'CMM_003_PRE_ENROLLMENT_OPEN',
+  CMM_004_PILOT_PROGRAM = 'CMM_004_PILOT_PROGRAM',
+  CMM_005_LIVE = 'CMM_005_LIVE',
+  CMM_006_SCALING = 'CMM_006_SCALING',
+  CMM_007_NATIONAL = 'CMM_007_NATIONAL',
+  CMM_008_INTERNATIONAL = 'CMM_008_INTERNATIONAL',
+}
+
+/**
+ * Advertising channel entity type.
+ */
+export interface AdvertisingChannelType {
+  id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  superCategory: string;
+  subCategory: string;
+  maturityStage: ChannelMaturity;
+  isPaused: boolean;
+  isRetired: boolean;
+  partnerCategory: string | null;
+  iconUrl: string | null;
+  estimatedReach: number | null;
+  sortOrder: number;
+  configuration: Record<string, unknown>;
+  activatedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Business pre-order entity type.
+ */
+export interface BusinessPreOrderType {
+  id: string;
+  businessId: string;
+  channelId: string;
+  estimatedBudget: number;
+  preferredCity: string;
+  campaignDuration: string;
+  expectedLaunch: string;
+  campaignObjectives: string[];
+  preferredStartDate: Date | null;
+  additionalNotes: string | null;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  cancelledAt: Date | null;
+}
+
+/**
+ * Partner enrollment entity type.
+ */
+export interface PartnerEnrollmentType {
+  id: string;
+  userId: string;
+  partnerCategoryCode: string;
+  channelId: string;
+  platform: string | null;
+  platformUrl: string | null;
+  followersCount: number | null;
+  monthlyReach: number | null;
+  engagementRate: number | null;
+  contentNiche: string | null;
+  assetPhotos: string[];
+  locationCity: string | null;
+  locationZone: string | null;
+  availability: Record<string, unknown> | null;
+  expectedRate: number | null;
+  additionalData: Record<string, unknown>;
+  status: string;
+  verifiedAt: Date | null;
+  verifiedBy: string | null;
+  rejectionReason: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Partner category entity type.
+ */
+export interface PartnerCategoryType {
+  id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  superCategory: string;
+  channelsServed: string[];
+  enrollmentFields: Record<string, unknown>;
+  verificationMethod: string;
+  isActive: boolean;
+  minRequirements: Record<string, unknown>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Distribution center entity type.
+ */
+export interface DistributionCenterType {
+  id: string;
+  name: string;
+  type: string;
+  regionId: string;
+  zoneId: string;
+  wardId: string | null;
+  address: string;
+  gpsLat: number | null;
+  gpsLng: number | null;
+  supportedChannels: string[];
+  operatingHours: Record<string, unknown>;
+  capacityPerHour: number;
+  contactPhone: string | null;
+  managerUserId: string | null;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Print partner entity type.
+ */
+export interface PrintPartnerType {
+  id: string;
+  name: string;
+  contactPerson: string | null;
+  phone: string;
+  email: string | null;
+  regionId: string;
+  zoneId: string;
+  gpsLat: number | null;
+  gpsLng: number | null;
+  supportedChannels: string[];
+  capabilities: string[];
+  maxDailyCapacity: number;
+  workingHours: Record<string, unknown>;
+  leadTimeDays: number;
+  qualityRating: number;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Channel readiness score type.
+ */
+export interface ChannelReadiness {
+  channelId: string;
+  channelCode: string;
+  supply: { count: number; pct: number };
+  demand: { count: number; pct: number };
+  coverage: { cities: number; pct: number };
+  operational: { pct: number };
+  infrastructure: { pct: number };
+  composite: number;
+  recommended: boolean;
+}

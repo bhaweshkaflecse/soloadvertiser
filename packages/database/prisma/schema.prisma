@@ -701,3 +701,206 @@ model AnalyticsEvent {
   @@index([eventType, createdAt])
   @@map("analytics_events")
 }
+
+
+
+// === MARKETPLACE MODULE (CTX-015) ===
+
+enum ChannelMaturity {
+  CMM_001_MARKET_RESEARCH
+  CMM_002_PRE_ORDER_OPEN
+  CMM_003_PRE_ENROLLMENT_OPEN
+  CMM_004_PILOT_PROGRAM
+  CMM_005_LIVE
+  CMM_006_SCALING
+  CMM_007_NATIONAL
+  CMM_008_INTERNATIONAL
+}
+
+model AdvertisingChannel {
+  id               String          @id @default(uuid()) @db.Uuid
+  code             String          @unique
+  name             String
+  description      String?
+  superCategory    String          @map("super_category")
+  subCategory      String          @map("sub_category")
+  maturityStage    ChannelMaturity @default(CMM_002_PRE_ORDER_OPEN) @map("maturity_stage")
+  isPaused         Boolean         @default(false) @map("is_paused")
+  isRetired        Boolean         @default(false) @map("is_retired")
+  partnerCategory  String?         @map("partner_category")
+  iconUrl          String?         @map("icon_url")
+  estimatedReach   Int?            @map("estimated_reach")
+  sortOrder        Int             @default(0) @map("sort_order")
+  configuration    Json            @default("{}}")
+  activatedAt      DateTime?       @map("activated_at")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+
+  preOrders        BusinessPreOrder[]
+  enrollments      PartnerEnrollment[]
+  launchThreshold  ChannelLaunchThreshold?
+  launchProgress   ChannelLaunchProgress?
+
+  @@map("marketplace_advertising_channels")
+}
+
+model BusinessPreOrder {
+  id                String   @id @default(uuid()) @db.Uuid
+  businessId        String   @map("business_id") @db.Uuid
+  channelId         String   @map("channel_id") @db.Uuid
+  estimatedBudget   Int      @map("estimated_budget")
+  preferredCity     String   @map("preferred_city")
+  campaignDuration  String   @map("campaign_duration")
+  expectedLaunch    String   @map("expected_launch")
+  campaignObjectives String[] @map("campaign_objectives")
+  preferredStartDate DateTime? @map("preferred_start_date")
+  additionalNotes   String?  @map("additional_notes")
+  status            String   @default("submitted")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  cancelledAt       DateTime? @map("cancelled_at")
+
+  channel AdvertisingChannel @relation(fields: [channelId], references: [id])
+
+  @@map("marketplace_business_pre_orders")
+}
+
+
+
+// === PARTNER MODULE (CTX-016) ===
+
+model PartnerCategory {
+  id                String   @id @default(uuid()) @db.Uuid
+  code              String   @unique
+  name              String
+  description       String?
+  superCategory     String   @map("super_category")
+  channelsServed    String[] @map("channels_served")
+  enrollmentFields  Json     @map("enrollment_fields")
+  verificationMethod String  @map("verification_method")
+  isActive          Boolean  @default(true) @map("is_active")
+  minRequirements   Json     @default("{}") @map("min_requirements")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  enrollments PartnerEnrollment[]
+
+  @@map("marketplace_partner_categories")
+}
+
+model PartnerEnrollment {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  partnerCategoryCode String   @map("partner_category_code")
+  channelId           String   @map("channel_id") @db.Uuid
+  platform            String?
+  platformUrl         String?  @map("platform_url")
+  followersCount      Int?     @map("followers_count")
+  monthlyReach        Int?     @map("monthly_reach")
+  engagementRate      Decimal? @map("engagement_rate") @db.Decimal(5, 2)
+  contentNiche        String?  @map("content_niche")
+  assetPhotos         String[] @map("asset_photos") @db.Uuid
+  locationCity        String?  @map("location_city")
+  locationZone        String?  @map("location_zone") @db.Uuid
+  availability        Json?
+  expectedRate        Int?     @map("expected_rate")
+  additionalData      Json     @default("{}") @map("additional_data")
+  status              String   @default("submitted")
+  verifiedAt          DateTime? @map("verified_at")
+  verifiedBy          String?  @map("verified_by") @db.Uuid
+  rejectionReason     String?  @map("rejection_reason")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  channel  AdvertisingChannel @relation(fields: [channelId], references: [id])
+  category PartnerCategory    @relation(fields: [partnerCategoryCode], references: [code])
+
+  @@map("marketplace_partner_enrollments")
+}
+
+
+
+// === DISTRIBUTION MODULE (CTX-017) ===
+
+model DistributionCenter {
+  id                     String   @id @default(uuid()) @db.Uuid
+  name                   String
+  type                   String
+  regionId               String   @map("region_id") @db.Uuid
+  zoneId                 String   @map("zone_id") @db.Uuid
+  wardId                 String?  @map("ward_id") @db.Uuid
+  address                String
+  gpsLat                 Decimal? @map("gps_lat") @db.Decimal(10, 7)
+  gpsLng                 Decimal? @map("gps_lng") @db.Decimal(10, 7)
+  supportedChannels      String[] @map("supported_channels")
+  operatingHours         Json     @map("operating_hours")
+  capacityPerHour        Int      @map("capacity_per_hour")
+  contactPhone           String?  @map("contact_phone")
+  managerUserId          String?  @map("manager_user_id") @db.Uuid
+  status                 String   @default("active")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  @@map("marketplace_distribution_centers")
+}
+
+model PrintPartner {
+  id                    String   @id @default(uuid()) @db.Uuid
+  name                  String
+  contactPerson         String?  @map("contact_person")
+  phone                 String
+  email                 String?
+  regionId              String   @map("region_id") @db.Uuid
+  zoneId                String   @map("zone_id") @db.Uuid
+  gpsLat                Decimal? @map("gps_lat") @db.Decimal(10, 7)
+  gpsLng                Decimal? @map("gps_lng") @db.Decimal(10, 7)
+  supportedChannels     String[] @map("supported_channels")
+  capabilities          String[]
+  maxDailyCapacity      Int      @map("max_daily_capacity")
+  workingHours          Json     @map("working_hours")
+  leadTimeDays          Int      @default(3) @map("lead_time_days")
+  qualityRating         Decimal  @default(0) @map("quality_rating") @db.Decimal(3, 2)
+  status                String   @default("active")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@map("marketplace_print_partners")
+}
+
+model ChannelLaunchThreshold {
+  id                  String   @id @default(uuid()) @db.Uuid
+  channelId           String   @unique @map("channel_id") @db.Uuid
+  minBusinessInterest Int      @default(50) @map("min_business_interest")
+  minPartnerEnrollment Int     @default(30) @map("min_partner_enrollment")
+  minCitiesCovered    Int      @default(3) @map("min_cities_covered")
+  minTotalBudget      Int      @default(500000) @map("min_total_budget")
+  targetLaunchDate    DateTime? @map("target_launch_date")
+  autoRecommend       Boolean  @default(true) @map("auto_recommend")
+  configuredBy        String?  @map("configured_by") @db.Uuid
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  channel AdvertisingChannel @relation(fields: [channelId], references: [id])
+
+  @@map("marketplace_launch_thresholds")
+}
+
+model ChannelLaunchProgress {
+  id                   String   @id @default(uuid()) @db.Uuid
+  channelId            String   @unique @map("channel_id") @db.Uuid
+  businessCount        Int      @default(0) @map("business_count")
+  partnerCount         Int      @default(0) @map("partner_count")
+  totalBudget          Int      @default(0) @map("total_budget")
+  citiesCovered        Int      @default(0) @map("cities_covered")
+  businessProgressPct  Decimal  @default(0) @map("business_progress_pct") @db.Decimal(5, 2)
+  partnerProgressPct   Decimal  @default(0) @map("partner_progress_pct") @db.Decimal(5, 2)
+  combinedReadinessPct Decimal  @default(0) @map("combined_readiness_pct") @db.Decimal(5, 2)
+  weeklyBusinessGrowth Int      @default(0) @map("weekly_business_growth")
+  weeklyPartnerGrowth  Int      @default(0) @map("weekly_partner_growth")
+  recommended          Boolean  @default(false)
+  computedAt           DateTime @default(now()) @map("computed_at")
+
+  channel AdvertisingChannel @relation(fields: [channelId], references: [id])
+
+  @@map("marketplace_launch_progress")
+}
