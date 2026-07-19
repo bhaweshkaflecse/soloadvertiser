@@ -12,7 +12,7 @@ import { PartnerService } from './partner.service';
 import { SubmitEnrollmentDto, VerifyEnrollmentDto, EnrollmentQueryDto } from './dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { JwtPayload, Role } from '@solo-advertiser/types';
+import { JwtPayload, Role } from '@soloadvertiser/types';
 
 /**
  * Partner enrollment controller — handles partner enrollment lifecycle.

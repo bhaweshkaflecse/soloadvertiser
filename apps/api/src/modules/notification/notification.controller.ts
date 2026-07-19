@@ -14,7 +14,7 @@ import { NotificationTemplateService } from './notification-template.service';
 import { NotificationQueryDto, UpdatePreferencesDto } from './dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 @Controller('notifications')
 export class NotificationController {

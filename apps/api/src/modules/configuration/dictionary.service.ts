@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateDictionaryItemDto } from './dto/create-dictionary-item.dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 
 /**
  * Dictionary service — manages lookup/reference data used across the platform.

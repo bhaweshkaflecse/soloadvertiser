@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CampaignStatus } from '@solo-advertiser/types';
+import { CampaignStatus } from '@soloadvertiser/types';
 
 /**
  * DTO for querying/filtering campaigns.

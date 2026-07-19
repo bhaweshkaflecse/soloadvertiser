@@ -11,7 +11,7 @@ import {
 import { Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Server, Socket } from 'socket.io';
-import { JwtPayload } from '@solo-advertiser/types';
+import { JwtPayload } from '@soloadvertiser/types';
 
 /**
  * Socket.IO WebSocket gateway with JWT authentication.

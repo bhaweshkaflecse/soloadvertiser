@@ -10,7 +10,7 @@ import { FeatureFlagService } from './feature-flag.service';
 import { ToggleFeatureFlagDto } from './dto/toggle-feature-flag.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { Role, JwtPayload } from '@solo-advertiser/types';
+import { Role, JwtPayload } from '@soloadvertiser/types';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 /**

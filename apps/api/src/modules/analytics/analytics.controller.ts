@@ -3,7 +3,7 @@ import { AnalyticsService } from './analytics.service';
 import { MetricsService } from './metrics.service';
 import { MetricQueryDto, AnalyticsEventQueryDto } from './dto';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 import { MetricPeriod } from './interfaces/analytics.interface';
 
 @Controller('analytics')

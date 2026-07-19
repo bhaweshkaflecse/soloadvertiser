@@ -1,4 +1,4 @@
-import { CampaignStatus } from '@solo-advertiser/types';
+import { CampaignStatus } from '@soloadvertiser/types';
 
 /**
  * Valid state transitions for the campaign lifecycle state machine.

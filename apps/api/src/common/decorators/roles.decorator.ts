@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 export const ROLES_KEY = 'roles';
 

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common
 import { PrintPartnerService } from './print-partner.service';
 import { CreatePrintPartnerDto, DistributionQueryDto } from './dto';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * Print partner controller.

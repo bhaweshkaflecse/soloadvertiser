@@ -10,9 +10,9 @@ import { ConfigurationService } from './configuration.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { JwtPayload } from '@solo-advertiser/types';
+import { JwtPayload } from '@soloadvertiser/types';
 
 /**
  * Configuration settings controller.

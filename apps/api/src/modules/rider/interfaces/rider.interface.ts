@@ -1,4 +1,4 @@
-import { RiderStatus } from '@solo-advertiser/types';
+import { RiderStatus } from '@soloadvertiser/types';
 
 /**
  * Valid state transitions for the rider lifecycle state machine.

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PartnerCategoryService } from './partner-category.service';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Public } from '../../common/decorators/public.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * Partner category controller — manages partner category CRUD.

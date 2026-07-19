@@ -12,7 +12,7 @@ import { InvoiceService } from './invoice.service';
 import { ReconciliationService } from './reconciliation.service';
 import { FinanceQueryDto } from './dto';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * Finance Controller — Admin financial operations.

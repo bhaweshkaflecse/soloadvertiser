@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 import {
   LedgerAccountType,
   LedgerEntryType,

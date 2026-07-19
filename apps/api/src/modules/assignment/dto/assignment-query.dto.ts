@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AssignmentStatus } from '@solo-advertiser/types';
+import { AssignmentStatus } from '@soloadvertiser/types';
 
 /**
  * DTO for querying/filtering assignments.

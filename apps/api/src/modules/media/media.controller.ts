@@ -12,7 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MediaService } from './media.service';
 import { UploadMediaDto } from './dto/upload-media.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { JwtPayload } from '@solo-advertiser/types';
+import { JwtPayload } from '@soloadvertiser/types';
 
 /**
  * Media controller — file upload and retrieval endpoints.

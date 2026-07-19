@@ -7,7 +7,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateChannelDto, ChannelQueryDto } from './dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 import { VALID_CMM_TRANSITIONS } from './interfaces/marketplace.interface';
 import { ChannelActivatedEvent } from './events/channel-activated.event';
 

@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { BusinessStatus } from '@solo-advertiser/types';
+import { BusinessStatus } from '@soloadvertiser/types';
 
 /**
  * DTO for admin business listing — supports filtering, searching, pagination.

@@ -5,9 +5,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role, JwtPayload } from '@solo-advertiser/types';
+import { Role, JwtPayload } from '@soloadvertiser/types';
 import { ROLES_KEY } from '../decorators/roles.decorator';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 
 /**
  * Role-based access control guard.

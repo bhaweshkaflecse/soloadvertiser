@@ -10,7 +10,7 @@ import { RiderDocumentService } from './rider-document.service';
 import { SubmitDocumentDto, ReviewDocumentDto, ReviewAction } from './dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { JwtPayload, Role } from '@solo-advertiser/types';
+import { JwtPayload, Role } from '@soloadvertiser/types';
 
 /**
  * Rider document controller — self-service submission + admin review.

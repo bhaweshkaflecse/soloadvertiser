@@ -8,8 +8,8 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SubmitPaymentDto } from './dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
-import { CampaignStatus } from '@solo-advertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
+import { CampaignStatus } from '@soloadvertiser/types';
 import { CampaignFundedEvent } from './events/campaign-funded.event';
 
 /**

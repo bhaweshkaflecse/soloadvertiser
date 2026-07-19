@@ -7,7 +7,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SubmitEnrollmentDto, EnrollmentQueryDto } from './dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 import { PartnerEnrolledEvent } from './events/partner-enrolled.event';
 import { PartnerVerifiedEvent } from './events/partner-verified.event';
 

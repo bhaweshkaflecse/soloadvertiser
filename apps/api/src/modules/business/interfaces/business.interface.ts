@@ -1,4 +1,4 @@
-import { BusinessStatus } from '@solo-advertiser/types';
+import { BusinessStatus } from '@soloadvertiser/types';
 
 /**
  * Valid state transitions for the business lifecycle state machine.

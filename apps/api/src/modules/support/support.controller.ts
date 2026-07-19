@@ -13,7 +13,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { TicketQueryDto } from './dto/ticket-query.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { JwtPayload } from '@solo-advertiser/types';
+import { JwtPayload } from '@soloadvertiser/types';
 
 /**
  * Support controller (CTX-013) — CRUD for support tickets and messages.

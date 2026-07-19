@@ -9,7 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateAssignmentDto, AssignmentQueryDto } from './dto';
 import { BulkCreateAssignmentDto } from './dto/create-assignment.dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 import { CampaignService } from '../campaign/campaign.service';
 import { MatchingService } from './matching.service';
 import { AssignmentCreatedEvent } from './events/assignment-created.event';

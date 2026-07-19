@@ -16,7 +16,7 @@ import { GeneratePayoutDto, ApprovePayoutDto, CompletePayoutItemDto } from './dt
 import { FailPayoutItemDto } from './dto/finance-query.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * Payout Controller — Payout batch management for Finance Staff.

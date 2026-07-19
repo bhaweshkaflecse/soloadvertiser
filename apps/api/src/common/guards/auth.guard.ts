@@ -7,8 +7,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { JwtPayload } from '@solo-advertiser/types';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { JwtPayload } from '@soloadvertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 
 /**
  * Global JWT authentication guard.

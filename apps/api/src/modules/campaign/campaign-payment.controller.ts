@@ -9,7 +9,7 @@ import { CampaignPaymentService } from './campaign-payment.service';
 import { SubmitPaymentDto, RejectPaymentDto } from './dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { JwtPayload, Role } from '@solo-advertiser/types';
+import { JwtPayload, Role } from '@soloadvertiser/types';
 
 /**
  * Campaign payment controller — handles payment submission and admin verification.

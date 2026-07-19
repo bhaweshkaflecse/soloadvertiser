@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common
 import { DistributionCenterService } from './distribution-center.service';
 import { CreateCenterDto, DistributionQueryDto } from './dto';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * Distribution center controller.

@@ -8,7 +8,7 @@ import { WalletService } from './wallet.service';
 import { WalletTransactionQueryDto } from './dto/finance-query.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * Wallet Controller — Rider self-service wallet endpoints.

@@ -12,7 +12,7 @@ import { CampaignService } from './campaign.service';
 import { CreateCampaignDto, CampaignQueryDto, CancelCampaignDto } from './dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { JwtPayload, Role } from '@solo-advertiser/types';
+import { JwtPayload, Role } from '@soloadvertiser/types';
 
 /**
  * Campaign controller — handles business campaign CRUD and admin lifecycle operations.

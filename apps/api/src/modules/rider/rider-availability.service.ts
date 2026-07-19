@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
-import { RiderStatus } from '@solo-advertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
+import { RiderStatus } from '@soloadvertiser/types';
 import { RiderService } from './rider.service';
 import { VALID_TRANSITIONS } from './interfaces/rider.interface';
 

@@ -11,7 +11,7 @@ import { DictionaryService } from './dictionary.service';
 import { CreateDictionaryItemDto } from './dto/create-dictionary-item.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { Role, JwtPayload } from '@solo-advertiser/types';
+import { Role, JwtPayload } from '@soloadvertiser/types';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 /**

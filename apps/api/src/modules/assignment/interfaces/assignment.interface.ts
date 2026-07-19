@@ -1,4 +1,4 @@
-import { AssignmentStatus } from '@solo-advertiser/types';
+import { AssignmentStatus } from '@soloadvertiser/types';
 
 /**
  * Valid state transitions for the assignment lifecycle state machine.

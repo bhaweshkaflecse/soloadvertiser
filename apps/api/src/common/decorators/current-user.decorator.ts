@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { JwtPayload } from '@solo-advertiser/types';
+import { JwtPayload } from '@soloadvertiser/types';
 
 /**
  * Extracts the current authenticated user from the request.

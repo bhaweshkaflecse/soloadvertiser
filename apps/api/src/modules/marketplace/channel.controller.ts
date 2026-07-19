@@ -13,7 +13,7 @@ import { CreateChannelDto, ChannelQueryDto, ActivateChannelDto } from './dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Public } from '../../common/decorators/public.decorator';
-import { JwtPayload, Role } from '@solo-advertiser/types';
+import { JwtPayload, Role } from '@soloadvertiser/types';
 
 /**
  * Channel controller — manages advertising channel CRUD and lifecycle.

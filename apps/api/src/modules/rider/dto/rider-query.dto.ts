@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { RiderStatus } from '@solo-advertiser/types';
+import { RiderStatus } from '@soloadvertiser/types';
 
 /**
  * DTO for admin rider listing — supports filtering, searching, pagination.

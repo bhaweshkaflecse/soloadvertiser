@@ -13,7 +13,7 @@ import { GoogleAuthService } from './google-auth.service';
 import { RegisterDto, LoginDto, RefreshTokenDto, SendOtpDto, VerifyOtpDto, GoogleAuthDto } from './dto';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { JwtPayload } from '@solo-advertiser/types';
+import { JwtPayload } from '@soloadvertiser/types';
 
 /**
  * Identity / Authentication controller.

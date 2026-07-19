@@ -12,7 +12,7 @@ import { CreateAssignmentDto, RemoveAssignmentDto, AssignmentQueryDto } from './
 import { BulkCreateAssignmentDto } from './dto/create-assignment.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { JwtPayload, Role } from '@solo-advertiser/types';
+import { JwtPayload, Role } from '@soloadvertiser/types';
 
 /**
  * Assignment controller — handles admin assignment operations.

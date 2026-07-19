@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../prisma/prisma.service';
-import { AuthTokens, JwtPayload, Role } from '@solo-advertiser/types';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { AuthTokens, JwtPayload, Role } from '@soloadvertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 import { randomUUID } from 'crypto';
 
 interface GoogleProfile {

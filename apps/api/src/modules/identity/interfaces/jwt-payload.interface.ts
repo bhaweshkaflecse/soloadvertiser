@@ -1,4 +1,4 @@
-import { Role } from '@solo-advertiser/types';
+import { Role } from '@soloadvertiser/types';
 
 /**
  * JWT token payload structure.

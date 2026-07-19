@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SubmitBusinessDocumentDto } from './dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
-import { BusinessStatus } from '@solo-advertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
+import { BusinessStatus } from '@soloadvertiser/types';
 import { REQUIRED_DOCUMENT_TYPES } from './interfaces/business.interface';
 import { BusinessService } from './business.service';
 

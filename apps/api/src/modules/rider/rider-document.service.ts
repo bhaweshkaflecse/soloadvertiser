@@ -7,8 +7,8 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { SubmitDocumentDto } from './dto';
 import { ReviewAction } from './dto/review-document.dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
-import { RiderStatus } from '@solo-advertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
+import { RiderStatus } from '@soloadvertiser/types';
 import { REQUIRED_DOCUMENT_TYPES } from './interfaces/rider.interface';
 import { RiderService } from './rider.service';
 

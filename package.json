@@ -12,6 +12,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "clean": "turbo clean && rm -rf node_modules",
+    "db:generate": "pnpm --filter @soloadvertiser/database exec prisma generate",
+    "db:migrate": "pnpm --filter @soloadvertiser/database exec prisma migrate dev",
+    "db:studio": "pnpm --filter @soloadvertiser/database exec prisma studio",
+    "db:seed": "pnpm --filter @soloadvertiser/database exec prisma db seed",
     "prepare": "husky"
   },
   "devDependencies": {

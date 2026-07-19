@@ -7,7 +7,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { StorageService } from './storage.service';
 import { UploadMediaDto } from './dto/upload-media.dto';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 
 /**
  * Media service — orchestrates file uploads, metadata storage, and signed URL generation.

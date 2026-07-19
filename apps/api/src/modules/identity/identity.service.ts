@@ -9,8 +9,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../prisma/prisma.service';
 import { RegisterDto, LoginDto, RefreshTokenDto } from './dto';
-import { AuthTokens, JwtPayload, Role } from '@solo-advertiser/types';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { AuthTokens, JwtPayload, Role } from '@soloadvertiser/types';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 

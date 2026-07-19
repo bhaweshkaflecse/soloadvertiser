@@ -12,7 +12,7 @@ import {
 import { NotificationTemplateService } from './notification-template.service';
 import { PushService } from './push.service';
 import { NotificationSentEvent } from './events/notification-sent.event';
-import { ERROR_CODES } from '@solo-advertiser/contracts';
+import { ERROR_CODES } from '@soloadvertiser/contracts';
 
 @Injectable()
 export class NotificationService {
