@@ -1,0 +1,115 @@
+version: '3.8'
+
+# Production deployment configuration
+# Usage: docker compose -f docker-compose.production.yml up -d
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: soloadvertiser-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - admin-web
+      - business-web
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.api
+    container_name: soloadvertiser-api
+    restart: always
+    expose:
+      - "3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://soloadvertiser:${DB_PASSWORD}@postgres:5432/soloadvertiser
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  admin-web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.web
+      args:
+        APP_NAME: admin-web
+    container_name: soloadvertiser-admin
+    restart: always
+    expose:
+      - "3001"
+    environment:
+      NODE_ENV: production
+
+  business-web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.web
+      args:
+        APP_NAME: business-web
+    container_name: soloadvertiser-business
+    restart: always
+    expose:
+      - "3002"
+    environment:
+      NODE_ENV: production
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: soloadvertiser-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: soloadvertiser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: soloadvertiser
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U soloadvertiser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: soloadvertiser-redis
+    restart: always
+    volumes:
+      - redis_data:/data
+      - ./infrastructure/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.api
+    container_name: soloadvertiser-worker
+    restart: always
+    command: ["node", "dist/worker"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://soloadvertiser:${DB_PASSWORD}@postgres:5432/soloadvertiser
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
