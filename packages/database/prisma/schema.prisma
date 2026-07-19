@@ -731,7 +731,7 @@ model AdvertisingChannel {
   iconUrl          String?         @map("icon_url")
   estimatedReach   Int?            @map("estimated_reach")
   sortOrder        Int             @default(0) @map("sort_order")
-  configuration    Json            @default("{}}")
+  configuration    Json            @default("{}")
   activatedAt      DateTime?       @map("activated_at")
   createdAt        DateTime        @default(now()) @map("created_at")
   updatedAt        DateTime        @updatedAt @map("updated_at")
