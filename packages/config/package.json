@@ -17,6 +17,7 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.0",
     "@soloadvertiser/tsconfig": "workspace:*",
     "typescript": "^5.4.0"
   }

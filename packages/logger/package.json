@@ -17,6 +17,7 @@
     "pino-pretty": "^10.3.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.0",
     "@soloadvertiser/tsconfig": "workspace:*",
     "typescript": "^5.4.0"
   }

@@ -13,6 +13,7 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@types/node": "^20.11.0",
     "@soloadvertiser/tsconfig": "workspace:*",
     "typescript": "^5.4.0"
   }

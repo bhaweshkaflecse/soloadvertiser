@@ -24,6 +24,7 @@
     "@prisma/client": "^5.10.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.0",
     "@soloadvertiser/tsconfig": "workspace:*",
     "prisma": "^5.10.0",
     "ts-node": "^10.9.0",
